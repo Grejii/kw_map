@@ -1,0 +1,44 @@
+/* App.css */
+.App {
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+#map {
+  margin: 20px;
+  position: relative;
+}
+
+#map img {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #ddd;
+}
+
+#building-info {
+  display: none;
+  margin-top: 20px;
+  transition: opacity 0.3s ease-in-out;
+}
+
+#building-info.visible {
+  display: block;
+  opacity: 1;
+}
+
+#building-name {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+#building-image {
+  width: 300px;
+  height: auto;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+}
+
+.map-area:hover {
+  cursor: pointer;
+  outline: 2px solid #6495ED;
+}
