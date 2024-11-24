@@ -56,7 +56,7 @@ const styles = {
   },
   floorList: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)', // 2열 고정
+    gridTemplateColumns: 'repeat(1, 1fr)', // 2열 고정
     gap: '15px',
     marginTop: '20px',
   },

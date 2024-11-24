@@ -3,8 +3,18 @@ const Building1 = {
   id: 1,
   name: '80주년 기념관',
   floors: [
-    { floor: 'B3층', rooms: ['주차장'] },
-    { floor: 'B2층', rooms: ['주차장'] },
+    {
+      floor: "B3층",
+      rooms: [
+        { name: "주차장", directions: "세븐일레븐 왼쪽 출입구로 들어가세요. \n 엘리베이터 또는 계단을 이용하여 B3층으로 이동하세요." },
+      ],
+    },
+    {
+      floor: "B2층",
+      rooms: [
+        { name: "주차장", directions: "세븐일레븐 왼쪽 출입구로 들어가세요. \n 엘리베이터 또는 계단을 이용하여 B2층으로 이동하세요." },
+      ],
+    },
     {
       floor: 'L층',
       rooms: [
