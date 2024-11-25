@@ -1,94 +1,67 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Building1 from './buildings/Building1';
-import Building2 from './buildings/Building2';
-import Building3 from './buildings/Building3';
-import Building4 from './buildings/Building4';
-import Building5 from './buildings/Building5';
-import Building6 from './buildings/Building6';
-import Building7 from './buildings/Building7';
-import Building8 from './buildings/Building8';
-import Building9 from './buildings/Building9';
-import Building10 from './buildings/Building10';
-import Building11 from './buildings/Building11';
-import Building12 from './buildings/Building12';
-import Building13 from './buildings/Building13';
-
-const buildings = [
-  Building1,
-  Building2,
-  Building3,
-  Building4,
-  Building5,
-  Building6,
-  Building7,
-  Building8,
-  Building9,
-  Building10,
-  Building11,
-  Building12,
-  Building13,
-];
+import buildings from './buildings';
 
 const MainPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredResults, setFilteredResults] = useState(buildings);
 
-  const handleSearch = (e) => {
-    const query = e.target.value.toLowerCase();
-    setSearchQuery(query);
+  // 검색 처리 함수
+  const handleSearch = () => {
+    if (!searchQuery.trim()) {
+      return []; // 검색어가 없으면 빈 배열 반환
+    }
 
-    if (query.length > 0) {
-      const results = buildings.flatMap((building) =>
-        building.floors
-          .filter((floor) =>
-            floor.rooms?.some((room) => room.toLowerCase().includes(query))
+    return buildings.flatMap((building) =>
+      building.floors.flatMap((floor) =>
+        (floor.rooms || []) // rooms가 존재하는지 확인
+          .filter((room) =>
+            room.name && // room.name이 정의되었는지 확인
+            room.name.toLowerCase().includes(searchQuery.toLowerCase())
           )
-          .map((floor) => ({
+          .map((room) => ({
             buildingId: building.id,
             buildingName: building.name,
-            floorNumber: floor.floor,
+            floor: floor.floor,
+            roomName: room.name,
           }))
-      );
-      setFilteredResults(results);
-    } else {
-      setFilteredResults(buildings); // 검색어가 비어 있으면 모든 건물 표시
-    }
+      )
+    );
   };
+
+  const searchResults = handleSearch();
 
   return (
     <div style={styles.container}>
       <h1 style={styles.title}>광운대학교 건물 안내</h1>
       <input
         type="text"
-        placeholder="강의실 이름 검색"
         value={searchQuery}
-        onChange={handleSearch}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        placeholder="강의실 이름을 검색하세요"
         style={styles.searchInput}
       />
-      <div style={styles.resultsList}>
-        {searchQuery.length === 0 &&
-          buildings.map((building) => (
-            <Link
-              key={building.id}
-              to={`/building/${building.id}`}
-              style={styles.resultCard}
-            >
-              <h3>{building.name}</h3>
-            </Link>
-          ))}
-        {searchQuery.length > 0 &&
-          filteredResults.map((result, index) => (
-            <Link
-              key={index}
-              to={`/building/${result.buildingId}/floor/${result.floorNumber}`}
-              style={styles.resultCard}
-            >
-              <h3>
-                {result.buildingName} - {result.floorNumber}
-              </h3>
-            </Link>
-          ))}
+      <div style={styles.buildingList}>
+        {searchQuery.trim()
+          ? searchResults.map((result, index) => (
+              <Link
+                key={index}
+                to={`/building/${result.buildingId}/floor/${result.floor}`}
+                style={styles.buildingCard}
+              >
+                <h3>
+                  {result.buildingName} - {result.floor} - {result.roomName}
+                </h3>
+              </Link>
+            ))
+          : buildings.map((building) => (
+              <Link
+                key={building.id}
+                to={`/building/${building.id}`}
+                style={styles.buildingCard}
+              >
+                <h3>{building.name}</h3>
+              </Link>
+            ))}
       </div>
     </div>
   );
@@ -96,32 +69,30 @@ const MainPage = () => {
 
 const styles = {
   container: {
+    textAlign: 'center',
     padding: '20px',
   },
   title: {
     fontSize: '24px',
     fontWeight: 'bold',
     color: '#800020',
-    textAlign: 'center',
     marginBottom: '20px',
   },
   searchInput: {
-    width: '100%',
     padding: '10px',
-    marginBottom: '20px',
-    borderRadius: '8px',
-    border: '1px solid #ccc',
     fontSize: '16px',
+    width: '80%',
+    maxWidth: '400px',
+    marginBottom: '20px',
+    border: '1px solid #ccc',
+    borderRadius: '4px',
   },
-  resultsList: {
+  buildingList: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)', // 항상 2열로 표시
+    gridTemplateColumns: 'repeat(2, 1fr)',
     gap: '15px',
   },
-  resultCard: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+  buildingCard: {
     padding: '20px',
     textAlign: 'center',
     backgroundColor: '#F9F5F6',
